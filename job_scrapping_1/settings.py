@@ -50,9 +50,6 @@ CONCURRENT_REQUESTS = 2
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'job_scrapping_1.middleware.ScrapyPlaywrightDownloadHandler': 543,
-# }
 
 # Enable Scrapy Playwright integration
 DOWNLOAD_HANDLERS = {
@@ -104,19 +101,14 @@ REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
 
-# Source - https://stackoverflow.com/questions/76705902/playwright-scrapy-cant-login-to-site-but-just-plawright-is-do
-# Posted by Gurhan Goktas
-# Retrieved 2025-11-06, License - CC BY-SA 4.0
-
 PLAYWRIGHT_PROCESS_REQUEST_HEADERS = None
-
+PLAYWRIGHT_BROWSER_TYPE = "chromium"
 PLAYWRIGHT_LAUNCH_OPTIONS = {
-    "headless": False
+    "headless": True,
 }
 
-# PLAYWRIGHT_CONTEXTS = {
-#     "default":{
-#         "storage_state":"auth_state.json"
-#     }
-# }
+DEFAULT_REQUEST_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+}
+
 

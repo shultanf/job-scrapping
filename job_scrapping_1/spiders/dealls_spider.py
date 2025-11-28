@@ -28,6 +28,7 @@ class deallsSpider(scrapy.Spider):
     def start_requests(self):
 
         url = "https://dealls.com/?searchJob=data"
+        url = "https://dealls.com"
 
         yield scrapy.Request(url=url,
                              callback=self.parse,
@@ -35,6 +36,7 @@ class deallsSpider(scrapy.Spider):
                                  "playwright":True,
                                  "playwright_include_page":True,
                                  "playwright_page_methods":[
+                                     PageMethod("wait_for_load_state", "networkidle"),
                                      PageMethod("evaluate", js_script),
                                      PageMethod("content")
                                      ]
@@ -92,66 +94,3 @@ class deallsSpider(scrapy.Spider):
 
         
 
-
-    def parse_jobb(self, response, **kwargs):
-        # xpath_jobs = '//*[@id="__next"]/div[3]/main/div[2]/div[3]/div/a'
-        # jobs = response.xpath(xpath_jobs)
-
-        jobs = response.css("a.rounded-lg")
-        
-        for job in jobs:
-            # Job title
-            title = job.css("div.font-bold::text").get()
-
-            # Company name
-            company = job.css("div.flex.items-center.gap-\\[4\\.6px\\]::text").get()
-            
-            # Details
-            details = job.css("div.mb-1\\.5.flex.flex-col.gap-1.lg\\:mb-3 > div")
-            details_list = []
-            for index, detail in enumerate(details):
-                if index == 0:
-                    text = detail.css("span > button::text").get()
-                    details_list.append(text)
-                else:
-                    text = detail.css("span::text").get()
-                    details_list.append(text)
-
-            # Job contract (full-time, part-time, contract, etc)
-            # contract = details_list[0]
-            # contract = job.css("div.flex.items-center.gap-2.text-neutral-100.text-xs.md\\:text-sm span::text").get()
-
-            # Work location and setup (on-site, hybrid, remote, etc.)
-            # xpath_workplace = './/div/div[1]/div[2]/div[2]/span'
-            # workplace = response.xpath(f"{xpath_workplace}/text()").getall()
-            # workplace = job.css("flex items-center gap-2 text-neutral-100 text-xs md:text-sm")
-
-            # workplace = details_list[1].split("•")
-            # work_setup = workplace[0].lower().strip()
-            # work_location = workplace[-1].lower().strip()
-
-            yield {
-                "title":title,
-                "company":company,
-                "details":[detail for detail in details_list],
-                # "contract":contract,
-                # "workplace": workplace,
-                # "work_setup": work_setup,
-                # "work_location": work_location
-            }
-
-            # # Min. qualification
-            # xpath_qualification = './/div/div[1]/div[2]/div[3]/span'
-            # min_qualification = response.xpath(f"{xpath_qualification}/text()").get().lower()
-
-            # # is_experience_needed = bool(re.search(r'\bexperience\b', min_qualification))
-            # # if is_experience_needed == True:
-            # #     min_years_experience = re.findall(r'/d+', min_qualification)[0]
-            # # else:
-            # #     min_years_experience = None
-
-            # # Salary
-            # xpath_salary = './/div/div[1]/div[2]/div[4]/span' + '/text()'
-            # salary = response.xpath(xpath_salary).getall()
-
-        # next = ''
